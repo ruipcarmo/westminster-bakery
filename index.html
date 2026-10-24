@@ -597,20 +597,20 @@ footer .logo{color:var(--cream);margin-bottom:16px}
 
 <script>
 /* ---------- Data ---------- */
-const IMG = (id, w, q = 80) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=${q}`;
-const SRCSET = id => [600, 1200, 1920, 3840].map(w => `${IMG(id, w)} ${w}w`).join(", ");
+const IMG = (id, w, q = 80, frame = "fit=crop") => `https://images.unsplash.com/photo-${id}?auto=format&${frame}&w=${w}&q=${q}`;
+const SRCSET = (id, frame) => [600, 1200, 1920, 3840].map(w => `${IMG(id, w, 80, frame)} ${w}w`).join(", ");
 
 const PRODUCTS = [
-  { id: "sourdough",  name: "Classic Sourdough",       cat: "Bread",    price: 4.80, img: "1586444248902-2f64eddc13df", tag: "Bestseller", desc: "Crackly crust, soft open crumb. Slow-rised for 48 hours." },
+  { id: "sourdough",  name: "Classic Sourdough",       cat: "Bread",    price: 4.80, img: "1586444248902-2f64eddc13df", frame: "fit=fill&fill=gen&ar=1:1", tag: "Bestseller", desc: "Crackly crust, soft open crumb. Slow-rised for 48 hours." },
   { id: "rye",        name: "Seeded Rye",              cat: "Bread",    price: 4.50, img: "1534620808146-d33bb39128b2", desc: "Dark, hearty and packed with sunflower and pumpkin seeds." },
   { id: "tin",        name: "Farmhouse White Tin",     cat: "Bread",    price: 3.20, img: "1598373182133-52452f7691ef", desc: "The perfect sandwich loaf. Toast it with lots of butter." },
   { id: "croissant",  name: "Butter Croissant",        cat: "Pastries", price: 2.40, img: "1623334044303-241021148842", tag: "Morning fave", desc: "Golden, flaky layers made with real French-style butter." },
   { id: "painchoc",   name: "Pain au Chocolat",        cat: "Pastries", price: 2.80, img: "1483695028939-5bb13f8648b0", desc: "Buttery pastry wrapped around two bars of dark chocolate." },
   { id: "chelsea",    name: "Chelsea Bun",             cat: "Pastries", price: 2.60, img: "1509365465985-25d11c17e812", tag: "Since 1942", desc: "Our founders' recipe. Sticky, spiced and full of fruit." },
-  { id: "victoria",   name: "Victoria Sponge",         cat: "Cakes",    price: 22.00, img: "1565958011703-44f9829ba187", desc: "Light sponge, raspberry jam and fresh cream. Serves 8–10." },
-  { id: "fudge",      name: "Chocolate Fudge Cake",    cat: "Cakes",    price: 26.00, img: "1578985545062-69928b1d9587", desc: "Rich, gooey and made for celebrations. Serves 10–12." },
+  { id: "victoria",   name: "Victoria Sponge",         cat: "Cakes",    price: 22.00, img: "1565958011703-44f9829ba187", frame: "fit=crop&rect=263,376,3350,3350", desc: "Light sponge, raspberry jam and fresh cream. Serves 8–10." },
+  { id: "fudge",      name: "Chocolate Fudge Cake",    cat: "Cakes",    price: 26.00, img: "1578985545062-69928b1d9587", frame: "fit=crop&rect=683,0,2172,2172", desc: "Rich, gooey and made for celebrations. Serves 10–12." },
   { id: "banana",     name: "Banana Bread",            cat: "Cakes",    price: 3.20, img: "1606101273945-e9eba91c0dc4", desc: "A thick, moist slice with a hint of cinnamon." },
-  { id: "cookies",    name: "Choc Chip Cookies (x4)",  cat: "Treats",   price: 5.00, img: "1558961363-fa8fdf82db35", desc: "Crisp edges, chewy middles, big chunks of chocolate." },
+  { id: "cookies",    name: "Choc Chip Cookies (x4)",  cat: "Treats",   price: 5.00, img: "1558961363-fa8fdf82db35", frame: "fit=crop&rect=986,1253,2300,2300", desc: "Crisp edges, chewy middles, big chunks of chocolate." },
   { id: "doughnut",   name: "Jam Doughnut",            cat: "Treats",   price: 2.20, img: "1612240498936-65f5101365d2", desc: "Pillowy, sugar-dusted and filled with raspberry jam." },
   { id: "tarts",      name: "Fresh Fruit Tartlets (x6)",cat: "Treats",  price: 15.00, img: "1495147466023-ac5c588e2e94", tag: "Pre-order", desc: "Crisp pastry, vanilla custard and seasonal fruit." },
 ];
@@ -648,7 +648,7 @@ function renderProducts(cat = "all") {
   $("#grid").innerHTML = list.map((p, i) => `
     <article class="card" style="animation-delay:${i * 60}ms">
       <div class="card-img">
-        <img loading="lazy" alt="${p.name}" src="${IMG(p.img, 1200)}" srcset="${SRCSET(p.img)}" sizes="(max-width:640px) 100vw, (max-width:1000px) 50vw, 25vw">
+        <img loading="lazy" alt="${p.name}" src="${IMG(p.img, 1200, 80, p.frame)}" srcset="${SRCSET(p.img, p.frame)}" sizes="(max-width:640px) 100vw, (max-width:1000px) 50vw, 25vw">
         ${p.tag ? `<span class="tag">${p.tag}</span>` : ""}
       </div>
       <div class="card-body">
@@ -719,7 +719,7 @@ function renderCart() {
     }
     body.innerHTML = items.map(([id, q]) => { const p = find(id); return `
       <div class="line">
-        <img src="${IMG(p.img, 200)}" alt="">
+        <img src="${IMG(p.img, 200, 80, p.frame)}" alt="">
         <div><b>${p.name}</b><small>${gbp(p.price)} each</small>
           <div class="qty"><button data-dec="${id}" aria-label="One less">−</button><span>${q}</span><button data-inc="${id}" aria-label="One more">+</button></div>
         </div>
